@@ -24,11 +24,20 @@ app.get("/api/shopping",function(req,res) {
 
 app.post("/api/shopping",function(req,res) {
 	let item = {
-		...req.body
+		...req.body,
+		id:id
 	}
+	id++;
 	database.push(item);
 	return res.status(201).json(item);
 });
+
+app.delete("/api/shopping/:id",function(req,res) {
+	let tempId = parseInt(req.params.id)
+	let tempDatabase = database.filter(item => item.id !== tempId);
+	database = tempDatabase;
+	return res.status(200).json({message:"Succees"});
+})
 
 app.listen(port);
 
