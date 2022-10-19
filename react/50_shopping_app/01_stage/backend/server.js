@@ -22,6 +22,14 @@ app.get("/api/shopping",function(req,res) {
 	return res.status(200).json(database);
 });
 
+app.post("/api/shopping",function(req,res) {
+	let item = {
+		...req.body
+	}
+	database.push(item);
+	return res.status(201).json(item);
+});
+
 app.listen(port);
 
 console.log("Running in port",port);
