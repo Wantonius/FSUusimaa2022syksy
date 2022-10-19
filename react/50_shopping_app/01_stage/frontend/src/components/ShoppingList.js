@@ -1,3 +1,5 @@
+import Row from './Row';
+
 const ShoppingList = (props) => {
 
 	let items = props.list.map(item => {
