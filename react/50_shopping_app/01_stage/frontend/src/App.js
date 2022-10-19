@@ -42,6 +42,9 @@ function App() {
 							})
 						}
 						return;
+					case "removeitem":
+						getList();
+						return;
 					default:
 						return;
 				}
@@ -53,6 +56,9 @@ function App() {
 					case "getlist":
 						console.log("Error in fetching data. Server responded with a status",response.status,response.statusText)
 						return;
+					case "removeitem":
+						console.log("Error in removing item. Server responded with a status",response.status,response.statusText)
+						return;						
 					default:
 						return;
 				}
@@ -86,12 +92,23 @@ function App() {
 		})
 	}
 	
+	const removeItem = (id) => {
+		setUrlRequest({
+			url:"/api/shopping/"+id,
+			request:{
+				method:"DELETE",
+				headers:{"Content-Type":"application/json"}
+			},
+			action:"removeitem"
+		})
+	}
+	
 	return (
 		<div className="App">
 			<Navbar/>
 			<hr/>
 			<Routes>
-				<Route exact path="/" element={<ShoppingList list={state.list}/>}/>
+				<Route exact path="/" element={<ShoppingList list={state.list} removeItem={removeItem}/>}/>
 				<Route path="/form" element={<ShoppingForm addItem={addItem}/>}/>
 			</Routes>
 		</div>
