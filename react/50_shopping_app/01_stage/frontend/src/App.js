@@ -19,6 +19,10 @@ function App() {
 	})
 	
 	useEffect(() => {
+		getList();
+	},[]);
+	
+	useEffect(() => {
 		
 		const fetchData = async () => {
 			if(!urlRequest.url) {
@@ -45,6 +49,9 @@ function App() {
 					case "removeitem":
 						getList();
 						return;
+					case "edititem":
+						getList();
+						return;
 					default:
 						return;
 				}
@@ -58,7 +65,10 @@ function App() {
 						return;
 					case "removeitem":
 						console.log("Error in removing item. Server responded with a status",response.status,response.statusText)
-						return;						
+						return;
+					case "edititem":
+						console.log("Error in editing item. Server responded with a status",response.status,response.statusText)
+						return;							
 					default:
 						return;
 				}
@@ -103,12 +113,24 @@ function App() {
 		})
 	}
 	
+	const editItem = (item) => {
+		setUrlRequest({
+			url:"/api/shopping/"+item.id,
+			request:{
+				method:"PUT",
+				headers:{"Content-Type":"application/json"},
+				body:JSON.stringify(item)
+			},
+			action:"edititem"
+		})
+	}
+	
 	return (
 		<div className="App">
 			<Navbar/>
 			<hr/>
 			<Routes>
-				<Route exact path="/" element={<ShoppingList list={state.list} removeItem={removeItem}/>}/>
+				<Route exact path="/" element={<ShoppingList list={state.list} removeItem={removeItem} editItem={editItem}/>}/>
 				<Route path="/form" element={<ShoppingForm addItem={addItem}/>}/>
 			</Routes>
 		</div>
