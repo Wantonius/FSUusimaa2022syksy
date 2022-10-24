@@ -21,6 +21,26 @@ createToken = () => {
 	return token.toString("hex");
 }
 
+isUserLogged = (req,res,next) => {
+	if(!req.headers.token) {
+		return res.status(403).json({message:"Forbidden"})
+	}
+	for(let i=0;i<loggedSessions.length;i++) {
+		if(req.headers.token === loggedSessions[i].token) {
+			let now = Date.now();
+			if(now > loggedSessions[i].ttl) {
+				loggedSessions.splice(i,1);
+				return res.status(403).json({message:"Forbidden"});
+			}
+			loggedSessions[i].ttl = now + time_to_live_diff;
+			req.session = {};
+			req.session.user = loggedSessions[i].user;
+			return next();
+		}
+	}
+	return res.status(403).json({message:"Forbidden"});
+}
+
 //LOGIN API
 
 app.post("/register",function(req,res) {
@@ -89,7 +109,7 @@ app.post("/login",function(req,res) {
 
 let port = process.env.PORT || 3001;
 
-app.use("/api",apiroute);
+app.use("/api",isUserLogged,apiroute);
 
 app.listen(port);
 
