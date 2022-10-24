@@ -82,6 +82,7 @@ app.post("/login",function(req,res) {
 				return res.status(200).json({token:token})
 			})
 		}
+		return;
 	}
 	return res.status(401).json({message:"Unauthorized"});
 })
