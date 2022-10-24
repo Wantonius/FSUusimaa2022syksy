@@ -9,7 +9,11 @@ import {Routes,Route} from 'react-router-dom';
 function App() {
 	
 	const [state,setState] = useState({
-		list:[]
+		list:[],
+		token:"",
+		isLogged:false,
+		error:"",
+		loading:false
 	})
 	
 	const [urlRequest,setUrlRequest] = useState({
@@ -18,9 +22,59 @@ function App() {
 		action:""
 	})
 	
+	//STORAGE FUNCTIONS
+	
+	const saveToStorage = (state) => {
+		sessionStorage.setItem("state",JSON.stringify(state));
+	}
+	
 	useEffect(() => {
-		getList();
+		if(sessionStorage.getItem("state")) {
+			let state = JSON.parse(sessionStorage.getItem("state"));
+			if(state.isLogged) {
+				getList(state.token);
+			}
+			setState(state);
+		}
 	},[]);
+	
+	//STATE FUNCTION
+	
+	const setError = (error) => {
+		setState((state) => {
+			let tempState = {
+				...state,
+				loading:false,
+				error:error
+			}
+			saveToStorage(tempState);
+			return tempState;
+		})
+	}
+	
+	const setLoading = (loading) => {
+		setState((state) => {
+			return {
+				...state,
+				loading:loading,
+				error:""
+			}
+		})
+	}
+	
+	const clearState = () => {
+		let state = {
+			list:[],
+			loading:false,
+			error:"",
+			token:"",
+			isLogged:false
+		}
+		saveToStorage(state);
+		setState(state);
+	}
+	
+	//FETCH
 	
 	useEffect(() => {
 		
@@ -28,7 +82,9 @@ function App() {
 			if(!urlRequest.url) {
 				return;
 			}
+			setLoading(true);
 			const response = await fetch(urlRequest.url,urlRequest.request);
+			setLoading(false);
 			if(!response) {
 				console.log("Error fetching!");
 				return;
@@ -41,8 +97,13 @@ function App() {
 					case "getlist":
 						let data = await response.json();
 						if(data) {
-							setState({
-								list:data
+							setState((state) => {
+								let tempState = {
+									...state,
+									list:data
+								}
+								saveToStorage(tempState);
+								return tempState;
 							})
 						}
 						return;
@@ -56,18 +117,23 @@ function App() {
 						return;
 				}
 			} else {
+				if(response.status === 403) {
+					clearState();
+					setError("Your session has expired. Please login again!");
+					return;
+				}
 				switch(urlRequest.action) {
 					case "additem":
-						console.log("Error in adding new item. Server responded with a status",response.status,response.statusText);
+						setError("Error in adding new item. Server responded with a status"+response.status+" "+response.statusText);
 						return;
 					case "getlist":
-						console.log("Error in fetching data. Server responded with a status",response.status,response.statusText)
+						setError("Error in fetching data. Server responded with a status"+response.status+" "+response.statusText)
 						return;
 					case "removeitem":
-						console.log("Error in removing item. Server responded with a status",response.status,response.statusText)
+						setError("Error in removing item. Server responded with a status"+response.status+" "+response.statusText)
 						return;
 					case "edititem":
-						console.log("Error in editing item. Server responded with a status",response.status,response.statusText)
+						setError("Error in editing item. Server responded with a status"+response.status+" "+response.statusText)
 						return;							
 					default:
 						return;

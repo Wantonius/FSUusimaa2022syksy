@@ -107,6 +107,19 @@ app.post("/login",function(req,res) {
 	return res.status(401).json({message:"Unauthorized"});
 })
 
+app.post("/logout",function(req,res) {
+	if(!req.headers.token) {
+		return res.status(404).json({message:"Not found"})
+	}
+	for(let i=0;i<loggedSessions.length;i++) {
+		if(loggedSessions[i].token === req.headers.token) {
+			loggedSessions.splice(i,1);
+			return res.status(200).json({message:"Logged out"})
+		}
+	}
+	return res.status(404).json({message:"Not found"});
+})
+
 let port = process.env.PORT || 3001;
 
 app.use("/api",isUserLogged,apiroute);
