@@ -4,6 +4,7 @@ import './App.css';
 import ShoppingForm from './components/ShoppingForm';
 import ShoppingList from './components/ShoppingList';
 import Navbar from './components/Navbar';
+import LoginPage from './components/LoginPage';
 import {Routes,Route} from 'react-router-dom';
 
 function App() {
@@ -113,6 +114,27 @@ function App() {
 					case "edititem":
 						getList();
 						return;
+					case "register":
+						setError("Register success!");
+						return;
+					case "login":
+						let loginData = await response.json();
+						if(loginData) {
+							setState((state) => {
+								let tempState = {
+									...state,
+									isLogged:true,
+									token:loginData.token
+								}
+								saveToStorage(tempState);
+								return tempState;
+							})
+							getList(loginData.token);
+						}
+						return;
+					case "logout":
+						clearState();
+						return;
 					default:
 						return;
 				}
@@ -134,7 +156,21 @@ function App() {
 						return;
 					case "edititem":
 						setError("Error in editing item. Server responded with a status"+response.status+" "+response.statusText)
-						return;							
+						return;
+					case "register":
+						if(response.status === 409) {
+							setError("Username already in use");
+							return;
+						}
+						setError("Error when registering. Server responded with a status "+response.status+" "+response.statusText)
+						return;
+					case "login":
+						setError("Error logging in. Server responded with a status "+response.status+" "+response.statusText);
+						return;
+					case "logout":
+						clearState();
+						setError("Server responded with an error. Logging you out!");
+						return;
 					default:
 						return;
 				}
@@ -145,12 +181,53 @@ function App() {
 		
 	},[urlRequest])
 	
-	const getList = () => {
+	//LOGIN API
+	
+	const register = (user) => {
+		setUrlRequest({
+			url:"/register",
+			request:{
+				method:"POST",
+				headers:{"Content-Type":"application/json"},
+				body:JSON.stringify(user)
+			},
+			action:"register"
+		})
+	}
+	
+	const login = (user) => {
+		setUrlRequest({
+			url:"/login",
+			request:{
+				method:"POST",
+				headers:{"Content-Type":"application/json"},
+				body:JSON.stringify(user)
+			},
+			action:"login"
+		})
+	}
+	
+	const logout = () => {
+		setUrlRequest({
+			url:"/logout",
+			request:{
+				method:"POST",
+				headers:{"Content-Type":"application/json",
+				"token":state.token}
+			},
+			action:"logout"
+		})
+	}
+	
+	//SHOPPING API
+	
+	const getList = (token = state.token) => {
 		setUrlRequest({
 			url:"/api/shopping",
 			request:{
 				method:"GET",
-				headers:{"Content-Type":"application/json"}
+				headers:{"Content-Type":"application/json",
+						"token":token}
 			},
 			action:"getlist"
 		})
@@ -161,7 +238,8 @@ function App() {
 			url:"/api/shopping",
 			request:{
 				method:"POST",
-				headers:{"Content-Type":"application/json"},
+				headers:{"Content-Type":"application/json",
+						"token":state.token},
 				body:JSON.stringify(item)
 			},
 			action:"additem"
@@ -173,7 +251,8 @@ function App() {
 			url:"/api/shopping/"+id,
 			request:{
 				method:"DELETE",
-				headers:{"Content-Type":"application/json"}
+				headers:{"Content-Type":"application/json",
+						"token":state.token}
 			},
 			action:"removeitem"
 		})
@@ -184,21 +263,38 @@ function App() {
 			url:"/api/shopping/"+item.id,
 			request:{
 				method:"PUT",
-				headers:{"Content-Type":"application/json"},
+				headers:{"Content-Type":"application/json",
+						"token":state.token},
 				body:JSON.stringify(item)
 			},
 			action:"edititem"
 		})
 	}
 	
-	return (
-		<div className="App">
-			<Navbar/>
-			<hr/>
-			<Routes>
+	//CONDITIONAL RENDERING
+	
+	let messageArea = <h4> </h4>
+	if(state.loading) {
+		messageArea = <h4>Loading...</h4>
+	}
+	if(state.error) {
+		messageArea = <h4>{state.error}</h4>
+	}
+	let routes = <Routes>
+				<Route exact path="/" element={<LoginPage login={login} register={register} setError={setError}/>}/>
+				</Routes>
+	if(state.isLogged) {
+		routes = <Routes>
 				<Route exact path="/" element={<ShoppingList list={state.list} removeItem={removeItem} editItem={editItem}/>}/>
 				<Route path="/form" element={<ShoppingForm addItem={addItem}/>}/>
 			</Routes>
+	}
+	return (
+		<div className="App">
+			<Navbar logout={logout} isLogged={state.isLogged}/>
+			{messageArea}
+			<hr/>
+			{routes}
 		</div>
 	);
 }
