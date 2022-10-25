@@ -1,11 +1,10 @@
 import {useState,useEffect} from 'react';
-import logo from './logo.svg';
 import './App.css';
 import ShoppingForm from './components/ShoppingForm';
 import ShoppingList from './components/ShoppingList';
 import Navbar from './components/Navbar';
 import LoginPage from './components/LoginPage';
-import {Routes,Route} from 'react-router-dom';
+import {Routes,Route,Navigate} from 'react-router-dom';
 
 function App() {
 	
@@ -282,11 +281,13 @@ function App() {
 	}
 	let routes = <Routes>
 				<Route exact path="/" element={<LoginPage login={login} register={register} setError={setError}/>}/>
+				<Route path="*" element={<Navigate to="/"/>}/>
 				</Routes>
 	if(state.isLogged) {
 		routes = <Routes>
 				<Route exact path="/" element={<ShoppingList list={state.list} removeItem={removeItem} editItem={editItem}/>}/>
 				<Route path="/form" element={<ShoppingForm addItem={addItem}/>}/>
+				<Route path="*" element={<Navigate to="/"/>}/>
 			</Routes>
 	}
 	return (

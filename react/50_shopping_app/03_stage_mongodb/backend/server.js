@@ -10,12 +10,8 @@ let app = express();
 
 app.use(express.json());
 
-//LOGIN DATABASES
 
-const registeredUsers = [];
-const loggedSessions = [];
-
-const time_to_live_diff = 10000;
+const time_to_live_diff = 3600000;
 
 //MONGOOSE CONNECTION
 
@@ -153,13 +149,12 @@ app.post("/logout",function(req,res) {
 	if(!req.headers.token) {
 		return res.status(404).json({message:"Not found"})
 	}
-	for(let i=0;i<loggedSessions.length;i++) {
-		if(loggedSessions[i].token === req.headers.token) {
-			loggedSessions.splice(i,1);
-			return res.status(200).json({message:"Logged out"})
+	sessionModel.deleteOne({"token":req.headers.token}, function(err) {
+		if(err) {
+			console.log("Failed to remove session when logging out. Reason:",err);
 		}
-	}
-	return res.status(404).json({message:"Not found"});
+		return res.status(200).json({message:"Logged out"});
+	})
 })
 
 let port = process.env.PORT || 3001;
