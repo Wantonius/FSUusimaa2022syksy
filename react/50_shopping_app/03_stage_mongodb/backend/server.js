@@ -29,6 +29,8 @@ mongoose.connect(url).then(
 	(error) => console.log("Failed to connect to mongodb. Reason:",error)
 )
 
+mongoose.set("toJSON",{virtuals:true})
+
 //MIDDLEWARE
 
 createToken = () => {
@@ -68,22 +70,24 @@ app.post("/register",function(req,res) {
 	if(req.body.username.length < 4 || req.body.password.length < 8) {
 		return res.status(400).json({message:"Bad Request"});
 	}
-	for(let i=0;i<registeredUsers.length;i++) {
-		if(req.body.username === registeredUsers[i].username) {
-			return res.status(409).json({message:"Username is already in use"})
-		}
-	}
 	bcrypt.hash(req.body.password,14,function(err,hash) {
 		if(err) {
 			return res.status(500).json({message:"Internal server error"})
 		}
-		let user = {
+		let user = new userModel({
 			username:req.body.username,
 			password:hash
-		}
-		registeredUsers.push(user);
-		console.log(user);
-		return res.status(201).json({message:"Register success"});
+		})
+		user.save(function(err,user) {
+			if(err){
+				console.log("Failed to create new user. Reason:",err);
+				if(err.code === 11000) {
+					return res.status(409).json({message:"Username already in use"})
+				}
+				return res.status(500).json({message:"Internal server error"})
+			}
+			return res.status(201).json({message:"User registered"});
+		})
 	})
 })
 
