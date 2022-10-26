@@ -11,8 +11,14 @@ let id = 100;
 //REST API
 
 router.get("/shopping",function(req,res) {
-	let tempDatabase = database.filter(item => item.user === req.session.user)
-	return res.status(200).json(tempDatabase);
+	let query = {"user":req.session.user};
+	itemModel.find(query, function(err,items) {
+		if(err) {
+			console.log("Failed to query items. Reason",err);
+			return res.status(500).json({message:"Internal server error"})
+		}
+		return res.status(200).json(items);
+	})
 });
 
 router.post("/shopping",function(req,res) {
