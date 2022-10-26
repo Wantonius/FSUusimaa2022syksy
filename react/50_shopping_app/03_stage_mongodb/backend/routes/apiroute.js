@@ -1,4 +1,5 @@
 const express = require("express");
+const itemModel = require("../models/item");
 
 const router = express.Router();
 
@@ -15,14 +16,25 @@ router.get("/shopping",function(req,res) {
 });
 
 router.post("/shopping",function(req,res) {
-	let item = {
-		...req.body,
-		id:id,
-		user:req.session.user
+	if(!req.body) {
+		return res.status(400).json({message:"Bad Request"});
 	}
-	id++;
-	database.push(item);
-	return res.status(201).json(item);
+	if(!req.body.type) {
+		return res.status(400).json({message:"Bad Request"});
+	}
+	let item = new itemModel({
+		type:req.body.type,
+		count:req.body.count,
+		price:req.body.price,
+		user:req.session.user
+	})
+	item.save(function(err) {
+		if(err) {
+			console.log("Failed to save new item. Reason",err);
+			return res.status(500).json({message:"Internal server error"})
+		}
+		return res.status(201).json({message:"Created"});
+	})
 });
 
 router.delete("/shopping/:id",function(req,res) {
