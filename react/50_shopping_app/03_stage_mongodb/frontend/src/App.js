@@ -220,9 +220,13 @@ function App() {
 	
 	//SHOPPING API
 	
-	const getList = (token = state.token) => {
+	const getList = (token = state.token,search) => {
+		let url = "/api/shopping"
+		if(search) {
+		   url = "/api/shopping"+search
+		}
 		setUrlRequest({
-			url:"/api/shopping",
+			url:url,
 			request:{
 				method:"GET",
 				headers:{"Content-Type":"application/json",
@@ -285,7 +289,7 @@ function App() {
 				</Routes>
 	if(state.isLogged) {
 		routes = <Routes>
-				<Route exact path="/" element={<ShoppingList list={state.list} removeItem={removeItem} editItem={editItem}/>}/>
+				<Route exact path="/" element={<ShoppingList list={state.list} removeItem={removeItem} editItem={editItem} getList={getList} token={state.token}/>}/>
 				<Route path="/form" element={<ShoppingForm addItem={addItem}/>}/>
 				<Route path="*" element={<Navigate to="/"/>}/>
 			</Routes>

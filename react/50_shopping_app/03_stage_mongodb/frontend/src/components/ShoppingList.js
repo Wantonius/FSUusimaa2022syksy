@@ -10,6 +10,10 @@ const ShoppingList = (props) => {
 		editIndex:-1
 	})
 	
+	const [search,setSearch] = useState({
+		type:""
+	})
+	
 	const changeMode = (mode,index) => {
 		if(mode === "remove") {
 			setState({
@@ -41,6 +45,20 @@ const ShoppingList = (props) => {
 		changeMode("cancel",0);
 	}
 
+	const searchItems = () => {
+		let query = "?type="+search.type;
+		props.getList(props.token,query);
+	}
+	
+	const onChange = (event) => {
+		setSearch((state) => {
+			return {
+				...state,
+				[event.target.name]:event.target.value
+			}
+		})
+	}
+
 	let items = props.list.map((item,index) => {
 		if(state.removeIndex === index) {
 			return (<RemoveRow key={item.id} item={item} changeMode={changeMode} removeItem={removeItem}/>)
@@ -52,6 +70,17 @@ const ShoppingList = (props) => {
 	})
 	
 	return (
+	<>
+		<div style={{"width":"30%","margin":"auto"}}>
+			<label htmlFor="type" className="form-label">Search by type</label>
+			<input type="text"
+					name="type"
+					id="type"
+					className="form-control"
+					onChange={onChange}
+					value={search.type}/>
+			<button onClick={searchItems} className="btn btn-primary">Search</button>
+		</div>
 		<table className="table table-striped">
 			<thead>
 				<tr>
@@ -66,6 +95,7 @@ const ShoppingList = (props) => {
 			{items}
 			</tbody>
 		</table>
+	</>
 	)
 }
 
