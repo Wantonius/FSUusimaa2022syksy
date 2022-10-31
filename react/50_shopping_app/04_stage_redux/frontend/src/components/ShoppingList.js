@@ -3,7 +3,7 @@ import Row from './Row';
 import RemoveRow from './RemoveRow';
 import EditRow from './EditRow';
 import {useDispatch,useSelector} from 'react-redux';
-import {getList} from '../actions/shoppingActions';
+import {getList,remove,edit} from '../actions/shoppingActions';
 
 const ShoppingList = (props) => {
 
@@ -42,12 +42,12 @@ const ShoppingList = (props) => {
 	}
 
 	const removeItem = (id) => {
-		//props.removeItem(id);
+		dispatch(remove(appState.login.token,id));
 		changeMode("cancel",0);
 	}
 	
 	const editItem = (item) => {
-		//props.editItem(item);
+		dispatch(edit(appState.login.token,item));
 		changeMode("cancel",0);
 	}
 

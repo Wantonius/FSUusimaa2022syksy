@@ -63,6 +63,58 @@ export const add = (token,item) => {
 	}
 }
 
+export const remove = (token,id) => {
+	return async (dispatch) => {
+		let request = {
+			method:"DELETE",
+			headers:{"Content-Type":"application/json",
+			"token":token}
+		}
+		dispatch(loading());
+		let response = await fetch("/api/shopping/"+id,request);
+		dispatch(stopLoading());
+		if(!response) {
+			dispatch(removeItemFailed("Failed to remove item. Server never responded. Retry later."))
+			return;
+		}
+		if(response.ok) {
+			dispatch(removeItemSuccess());
+			dispatch(getList(token));
+		} else {
+			if(response.status === 403) {
+				dispatch(logoutFailed("Your session expired. Logging you out!"))
+				return;
+			}
+			dispatch(removeItemFailed("Failed to remove item. Server responded with a status "+response.status+" "+response.statusText))
+		}
+	}
+}
+
+export const edit = (token,item) => {
+	return async (dispatch) => {
+		let request = {
+			method:"PUT",
+			headers:{
+				"Content-Type":"application/json",
+				"token":token
+			},
+			body:JSON.stringify(item)
+		}
+		dispatch(loading());
+		let response = await fetch("/api/shopping/"+item.id,request);
+		dispatch(stopLoading());
+		if(!response) {
+			dispatch(editItemFailed("Failed to edit item. Server never responded. Retry later."))
+			return;
+		}
+		if(response.ok) {
+			dispatch(editItemSuccess());
+			dispatch(getList(token));
+		} else {
+			dispatch(editItemFailed("Failed to edit item. Server responded with a status "+response.status+" "+response.statusText))
+		}
+	}
+}
 //ACTION CREATORS
 
 const fetchListSuccess = (list) => {
