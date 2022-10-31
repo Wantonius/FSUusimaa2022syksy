@@ -55,6 +55,28 @@ export const login = (user) => {
 	}
 }
 
+export const logout = (token) => {
+	return async (dispatch) => {
+		let request = {
+			method:"POST",
+			headers:{"Content-Type":"application/json",
+			"token":token}
+		}
+		dispatch(loading());
+		let response = await fetch("/logout",request);
+		dispatch(stopLoading());
+		if(!response) {
+			dispatch(logoutFailed("Server failed to respond. Logging you out!"))
+			return;
+		}
+		if(response.ok) {
+			dispatch(logoutSuccess());
+		} else {
+			dispatch(logoutFailed("Server responded with an error. Logging you out"))
+		}
+	}
+}
+
 //ACTION CREATORS
 
 export const loading = () => {
