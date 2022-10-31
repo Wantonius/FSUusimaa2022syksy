@@ -5,7 +5,7 @@ import * as actionConstants from './actionConstants';
 
 export const getList = (token,search) => {
 	return async (dispatch) => {
-		let url = "/shopping"
+		let url = "/api/shopping"
 		if(search) {
 			url = url + "?type="+search
 		}
@@ -48,7 +48,7 @@ export const add = (token,item) => {
 			body:JSON.stringify(item)
 		}
 		dispatch(loading());
-		let response = await fetch("/shopping",request);
+		let response = await fetch("/api/shopping",request);
 		dispatch(stopLoading());
 		if(!response) {
 			dispatch(addItemFailed("Failed to add new item. Server never responded. Retry later."))
