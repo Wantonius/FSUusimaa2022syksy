@@ -24,7 +24,67 @@ const loginReducer = (state = initialState, action) => {
 	console.log("loginReducer, action",action);
 	let tempState = {};
 	switch(action.type) {
-		
+		case actionConstants.LOADING:
+			return {
+				...state,
+				loading:true,
+				error:""
+			}
+		case actionConstants.STOP_LOADING:
+			return {
+				...state,
+				loading:false
+			}
+		case actionConstants.REGISTER_SUCCESS:
+			tempState = {
+				...state,
+				error:"Register success!"
+			}
+			saveToStorage(tempState);
+			return tempState;
+		case actionConstants.REGISTER_FAILED:
+			tempState = {
+				...state,
+				error:action.error
+			}
+			saveToStorage(tempState);
+			return tempState;
+		case actionConstants.LOGIN_SUCCESS:
+			tempState = {
+				loading:false,
+				isLogged:true,
+				token:action.token,
+				error:""
+			}
+			saveToStorage(tempState);
+			return tempState;
+		case actionConstants.LOGIN_FAILED:
+			tempState = {
+				...state,
+				error:action.error
+			}
+			saveToStorage(tempState);
+			return tempState;
+		case actionConstants.LOGOUT_SUCCESS:
+			tempState = {
+				loading:false,
+				isLogged:false,
+				error:"",
+				token:""
+			}
+			saveToStorage(tempState);
+			return tempState;
+		case actionConstants.LOGOUT_FAILED:
+			tempState = {
+				loading:false,
+				isLogged:false,
+				error:action.error,
+				token:""
+			}
+			saveToStorage(tempState);
+			return tempState;		
+		default:
+			return state;
 	}
 } 
 
