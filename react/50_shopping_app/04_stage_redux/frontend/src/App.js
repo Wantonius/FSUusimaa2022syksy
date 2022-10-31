@@ -256,17 +256,24 @@ function App() {
 	//CONDITIONAL RENDERING
 	
 	let messageArea = <h4> </h4>
-	if(appState.loading) {
+	if(appState.login.loading) {
 		messageArea = <h4>Loading...</h4>
 	}
-	if(appState.error) {
-		messageArea = <h4>{state.error}</h4>
+	let error = "";
+	if(appState.shopping.error) {
+		error = appState.shopping.error
+	}
+	if(appState.login.error) {
+		error = appState.login.error
+	}
+	if(error) {
+		messageArea = <h4>{error}</h4>
 	}
 	let routes = <Routes>
 				<Route exact path="/" element={<LoginPage />}/>
 				<Route path="*" element={<Navigate to="/"/>}/>
 				</Routes>
-	if(appState.isLogged) {
+	if(appState.login.isLogged) {
 		routes = <Routes>
 				<Route exact path="/" element={<ShoppingList list={state.list} removeItem={removeItem} editItem={editItem} getList={getList} token={state.token}/>}/>
 				<Route path="/form" element={<ShoppingForm addItem={addItem}/>}/>
@@ -275,7 +282,7 @@ function App() {
 	}
 	return (
 		<div className="App">
-			<Navbar logout={logout} isLogged={state.isLogged}/>
+			<Navbar />
 			{messageArea}
 			<hr/>
 			{routes}
