@@ -1,8 +1,13 @@
 import {Link} from 'react-router-dom';
+import {useDispatch,useSelector} from 'react-redux';
 
 const Navbar = (props) => {
 	
-	if(props.isLogged) {
+	const dispatch = useDispatch();
+	
+	const state = useSelector(state => state);
+	
+	if(state.isLogged) {
 		return(
 			<nav className="navbar navbar-expand-lg navbar-light bg-light">
 				<p className="navbar-brand" style={{marginLeft:10}}>Shopping App</p>

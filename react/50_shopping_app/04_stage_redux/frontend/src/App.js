@@ -5,16 +5,17 @@ import ShoppingList from './components/ShoppingList';
 import Navbar from './components/Navbar';
 import LoginPage from './components/LoginPage';
 import {Routes,Route,Navigate} from 'react-router-dom';
+import {useSelector} from 'react-redux';
 
 function App() {
 	
 	const [state,setState] = useState({
-		list:[],
-		token:"",
-		isLogged:false,
-		error:"",
-		loading:false
+		list:[]
 	})
+	
+	const stateSelector = state => state
+	
+	const appState = useSelector(stateSelector);
 	
 	const [urlRequest,setUrlRequest] = useState({
 		url:"",
@@ -32,7 +33,7 @@ function App() {
 		if(sessionStorage.getItem("state")) {
 			let state = JSON.parse(sessionStorage.getItem("state"));
 			if(state.isLogged) {
-				getList(state.token);
+				//getList(state.token);
 			}
 			setState(state);
 		}
@@ -182,29 +183,7 @@ function App() {
 	
 	//LOGIN API
 	
-	const register = (user) => {
-		setUrlRequest({
-			url:"/register",
-			request:{
-				method:"POST",
-				headers:{"Content-Type":"application/json"},
-				body:JSON.stringify(user)
-			},
-			action:"register"
-		})
-	}
-	
-	const login = (user) => {
-		setUrlRequest({
-			url:"/login",
-			request:{
-				method:"POST",
-				headers:{"Content-Type":"application/json"},
-				body:JSON.stringify(user)
-			},
-			action:"login"
-		})
-	}
+
 	
 	const logout = () => {
 		setUrlRequest({
@@ -277,17 +256,17 @@ function App() {
 	//CONDITIONAL RENDERING
 	
 	let messageArea = <h4> </h4>
-	if(state.loading) {
+	if(appState.loading) {
 		messageArea = <h4>Loading...</h4>
 	}
-	if(state.error) {
+	if(appState.error) {
 		messageArea = <h4>{state.error}</h4>
 	}
 	let routes = <Routes>
-				<Route exact path="/" element={<LoginPage login={login} register={register} setError={setError}/>}/>
+				<Route exact path="/" element={<LoginPage />}/>
 				<Route path="*" element={<Navigate to="/"/>}/>
 				</Routes>
-	if(state.isLogged) {
+	if(appState.isLogged) {
 		routes = <Routes>
 				<Route exact path="/" element={<ShoppingList list={state.list} removeItem={removeItem} editItem={editItem} getList={getList} token={state.token}/>}/>
 				<Route path="/form" element={<ShoppingForm addItem={addItem}/>}/>

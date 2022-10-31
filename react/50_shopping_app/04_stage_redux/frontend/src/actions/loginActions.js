@@ -28,6 +28,33 @@ export const register = (user) => {
 	}
 }
 
+export const login = (user) => {
+	return async (dispatch) => {
+		let request = {
+			method:"POST",
+			headers:{"Content-Type":"application/json"},
+			body:JSON.stringify(user)
+		}
+		dispatch(loading());
+		let response = await fetch("/login",request);
+		dispatch(stopLoading());
+		if(!response) {
+			dispatch(loginFailed("Connection error with the server. Retry later."));
+			return;
+		}
+		if(response.ok) {
+			let data = await response.json();
+			if(!data) {
+				dispatch(loginFailed("Failed to parse login information. Login failed"));
+				return;
+			}
+			dispatch(loginSuccess(data.token));
+		} else {
+			dispatch(loginFailed("Login failed. Server responded with a status "+response.status+" "+response.statusText));
+		}
+	}
+}
+
 //ACTION CREATORS
 
 export const loading = () => {
