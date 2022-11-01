@@ -38,11 +38,73 @@ const GameProvider = (props) => {
 		navigate("/game");
 	}
 	
+	const guess = (guess) => {
+		if(isNaN(guess)) {
+			setState((state) => {
+				let message = "Enter a NUMBER between "+state.minimumGuess+" and "+state.maximumGuess
+				return {
+					...state,
+					message:message
+				}
+			})
+			return;
+		}
+		if(guess < state.minimumGuess || guess > state.maximumGuess) {
+			setState((state) => {
+				let message = "Enter a number between "+state.minimumGuess+" and "+state.maximumGuess
+				return {
+					...state,
+					message:message
+				}
+			})
+			return;
+		}
+		if(guess < state.targetNumber && guess > state.minimumGuess) {
+			setState((state) => {
+				let message = "Your guess was too low. Guess again between "+guess+" and "+state.maximumGuess
+				return {
+					...state,
+					noOfGuesses:state.noOfGuesses+1,
+					minimumGuess:guess,
+					message:message
+				}
+			})
+			return;
+		}
+		if(guess > state.targetNumber && guess < state.maximumGuess) {
+			setState((state) => {
+				let message = "Your guess was too high. Guess again between "+state.minimumGuess+" and "+guess
+				return {
+					...state,
+					noOfGuesses:state.noOfGuesses+1,
+					maximumGuess:guess,
+					message:message
+				}
+			})		
+			return;	
+		}
+		let tempGuess = parseInt(guess)
+		if(tempGuess === state.targetNumber) {
+			let noOfGuesses = state.noOfGuesses + 1;
+			alert("Congrats "+state.playerName+". You won with "+noOfGuesses+" guesses");
+			setState({
+				targetNumber:0,
+				playerName:"",
+				noOfGuesses:0,
+				maximumGuess:100,
+				minimumGuess:1,
+				message:""				
+			})
+			navigate("/");
+		}
+	}
+	
 	return(
 		<GameContext.Provider value={{
 			playerName:state.playerName,
 			message:state.message,
-			startGame:startGame
+			startGame:startGame,
+			guess:guess
 		}}>
 			{props.children}
 		</GameContext.Provider>
