@@ -198,9 +198,13 @@ const useAction = () => {
 		})
 	}
 	
-	const getList = () => {
+	const getList = (query) => {
+		let url = "/api/shopping";
+		if(query) {
+			url = url + query;
+		}
 		setState({
-			url:"/api/shopping",
+			url:url,
 			request:{
 				method:"GET",
 				headers:{"Content-Type":"application/json",

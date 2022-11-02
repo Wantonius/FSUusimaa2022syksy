@@ -98,10 +98,10 @@ const listReducer = (state,action) => {
 		case actionConstants.REMOVE_ITEM_SUCCESS:
 		case actionConstants.EDIT_ITEM_SUCCESS:
 			return state;
-		case FETCH_LIST_FAILED:
-		case ADD_ITEM_FAILED:
-		case REMOVE_ITEM_FAILED:
-		case EDIT_ITEM_FAILED:
+		case actionConstants.FETCH_LIST_FAILED:
+		case actionConstants.ADD_ITEM_FAILED:
+		case actionConstants.REMOVE_ITEM_FAILED:
+		case actionConstants.EDIT_ITEM_FAILED:
 			tempState = {
 				...state,
 				error:action.error
