@@ -56,7 +56,7 @@ export const useAction = ():[ShoppingItem[],boolean,(item:ShoppingItem) => void,
 	
 	useEffect(() => {
 		
-		if(!urlRequest.request) {
+		if(!urlRequest.request.method) {
 			return;
 		}
 		
@@ -98,7 +98,7 @@ export const useAction = ():[ShoppingItem[],boolean,(item:ShoppingItem) => void,
 	const addItem = (item:ShoppingItem) => {
 		let tempRequest = new Request("/api/shopping",{
 			method:"POST",
-			headers:{"Content-Type","application/json"},
+			headers:{"Content-Type":"application/json"},
 			body:JSON.stringify(item)
 		})
 		setUrlRequest({
