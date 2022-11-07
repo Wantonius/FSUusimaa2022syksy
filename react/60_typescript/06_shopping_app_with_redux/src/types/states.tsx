@@ -3,7 +3,7 @@ import ShoppingItem from '../models/ShoppingItem';
 export interface LoginState {
 	isLogged:boolean;
 	token:string;
-	loading:boolean:
+	loading:boolean;
 	error:string;
 }
 

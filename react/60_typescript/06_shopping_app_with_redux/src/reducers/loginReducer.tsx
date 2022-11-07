@@ -23,6 +23,7 @@ const saveToStorage = (state:LoginState) => {
 const initialState:LoginState = getInitialState();
 
 const loginReducer:Reducer<LoginState,AnyAction> = (state:LoginState = initialState,action:AnyAction):LoginState => {
+	console.log("LoginReducer. Action",action)
 	let tempState:LoginState = {
 		...state
 	}

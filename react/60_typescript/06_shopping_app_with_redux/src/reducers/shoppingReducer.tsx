@@ -52,6 +52,14 @@ const shoppingReducer:Reducer<ShoppingState,AnyAction> = (state:ShoppingState = 
 			}
 			saveToStorage(tempState);
 			return tempState;
+		case actionConstants.LOGOUT_SUCCESS:
+		case actionConstants.LOGOUT_FAILED:
+			tempState ={
+				list:[],
+				error:""
+			}
+			saveToStorage(tempState);
+			return tempState;
 		default:
 			return state;
 	}
