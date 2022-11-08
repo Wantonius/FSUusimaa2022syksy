@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import  {ContactList} from './components/contactlist.component';
-import {ContactService} from './components/contactservice.service';
+import {ContactService} from './services/contactservice.service';
 
 @NgModule({
   declarations: [
