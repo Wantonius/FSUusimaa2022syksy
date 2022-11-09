@@ -9,11 +9,18 @@ import { HttpClientModule} from '@angular/common/http';
 
 
 import {LoginPage} from './components/loginpage.component';
+import {ShoppingForm} from './components/shoppingform.component';
+import {ShoppingList} from './components/shoppinglist.component';
+import {Navbar} from './components/navbar.component';
 import {LoginService} from './services/loginservice.service';
+import {ShoppingService} from './services/shoppingservice.service';
 @NgModule({
   declarations: [
     AppComponent,
-	LoginPage
+	LoginPage,
+	ShoppingForm,
+	ShoppingList,
+	Navbar
   ],
   imports: [
     BrowserModule,
@@ -22,7 +29,7 @@ import {LoginService} from './services/loginservice.service';
 	FormsModule,
 	HttpClientModule
   ],
-  providers: [LoginService],
+  providers: [LoginService,ShoppingService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

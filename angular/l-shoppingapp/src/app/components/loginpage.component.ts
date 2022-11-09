@@ -34,7 +34,7 @@ export class LoginPage implements OnInit {
 			data => {
 				this.message = "Login success";
 				this.loginService.setLoginState(true,data.token);
-				//this.router.navigate(["/list"])
+				this.router.navigate(["/list"])
 			},
 			error => this.message = error.message,
 			() => console.log("Login complete")

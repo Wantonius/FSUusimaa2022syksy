@@ -1,0 +1,19 @@
+<div style="text-align:center">
+	<nav class="navbar navbar-extend-lg navbar-light bg-light">
+		<p class="navbar-brand">Shopping App</p>
+		<ul class="navbar-nav" *ngIf="isUserLogged();else notLogged">
+			<li class="nav-item">
+				<a class="nav-link" routerLink="/list">Shopping List</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" routerLink="/form">Add new item</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" routerLink="/" (click)="logout()">Logout</a>
+			</li>			
+		</ul>
+		<ng-template #notLogged>
+			<ul class="navbar-nav"></ul>
+		</ng-template>
+	</nav>
+</div>
