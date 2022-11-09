@@ -17,11 +17,11 @@
 .hamburger span {
 	display:block;
 	position:absolute;
-	left:0;
-	width:100%;
+	top:44px;
+	left:18px;
+	right:18px;
 	height:8px;
-	background-color:#1a2580;
-	content:""
+	background:#1a2580;
 }
 
 
