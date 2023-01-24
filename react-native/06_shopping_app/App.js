@@ -1,20 +1,50 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import {useState} from 'react';
+import ShoppingList from './components/ShoppingList';
+import ShoppingForm from './components/ShoppingForm';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack'
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+	
+	const [state,setState] = useState({
+		list:[],
+		id:100
+	})
+	
+	const addToList = (item) => {
+		item.id = state.id;
+		setState((state) => {
+			return {
+				list:state.list.concat(item),
+				id:state.id+1
+			}
+		})
+	}
+	
+	const removeItem = (id) => {
+		setState((state) => {
+			let templist = state.list.filter(item => id !== item.id)
+			return {
+				...state,
+				list:templist
+			}
+		})
+	}
+	
+	return (
+		<NavigationContainer>
+			<Stack.Navigator>
+				<Stack.Screen name="ShoppingList">
+				{props => <ShoppingList {...props} list={state.list} removeItem={removeItem}/>}
+				</Stack.Screen>
+				<Stack.Screen name="Add Item">
+				{props => <ShoppingForm {...props} addToList={addToList}/>}
+				</Stack.Screen>
+			</Stack.Navigator>
+		</NavigationContainer>
+	);
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+

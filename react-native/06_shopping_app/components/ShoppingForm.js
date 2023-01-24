@@ -29,26 +29,34 @@ const ShoppingForm = (props) => {
 				<TextInput style={[styles.text,styles.input]}
 					onChangeText={(text) => {
 						setState((state) => {
-							...state,
-							type:text
+						return {	
+								...state,
+								type:text
+						}
 						})
 					}} value={state.type}/>
 			</View>
+			<View style={styles.row}>
 				<Text style={[styles.text,styles.label]}>Count:</Text>
 				<TextInput style={[styles.text,styles.input]}
 					onChangeText={(text) => {
 						setState((state) => {
-							...state,
-							count:text
+							return {	
+								...state,
+								count:text
+						}
 						})
 					}} value={state.count} inputMode="numeric"/>
 			</View>
+			<View style={styles.row}>
 				<Text style={[styles.text,styles.label]}>Price:</Text>
 				<TextInput style={[styles.text,styles.input]}
 					onChangeText={(text) => {
 						setState((state) => {
-							...state,
-							price:text
+							return {	
+								...state,
+								price:text
+							}
 						})
 					}} value={state.price} inputMode="numeric"/>
 			</View>
