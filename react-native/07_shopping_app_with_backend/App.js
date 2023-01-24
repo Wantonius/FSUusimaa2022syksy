@@ -51,7 +51,30 @@ export default function App() {
 								isLogged:true
 							}
 						})
+						getList(data.token);
 						return;
+					case "logout":
+						setState({
+							list:[],
+							isLogged:false,
+							token:""
+						})
+						return;
+					case "getlist":
+						const list = await response.json()
+						if(!list) {
+							return;
+						}
+						setState((state) => {
+							return {
+								...state,
+								list:list
+							}
+						})
+						return;
+					case "additem":
+					case "removeitem":
+						getList(state.token);
 					default:
 						return;
 				}
@@ -103,12 +126,58 @@ export default function App() {
 		})		
 	}
 	
+	const logout = () => {
+		setUrlRequest({
+			url:"/logout",
+			request:{
+				method:"POST",
+				headers:{"token":state.token}
+			},
+			action:"logout"
+		})
+	}
+	
+	//SHOPPING API
+	
+	const getList = (token) => {
+		setUrlRequest({
+			url:"/api/shopping",
+			request:{
+				method:"GET",
+				headers:{
+					"token":token
+				}
+			},
+			action:"getlist"
+		})
+	}
+	
 	const addToList = (item) => {
-
+		setUrlRequest({
+			url:"/api/shopping",
+			request:{
+				method:"POST",
+				headers:{
+					"Content-Type":"application/json",
+					"token":state.token
+				},
+				body:JSON.stringify(item)
+			},
+			action:"additem"
+		})
 	}
 	
 	const removeItem = (id) => {
-
+		setUrlRequest({
+			url:"/api/shopping/"+id,
+			request:{
+				method:"DELETE",
+				headers:{
+					"token":state.token
+				}
+			},
+			action:"removeitem"
+		})
 	}
 	
 	return (
@@ -117,7 +186,7 @@ export default function App() {
 			{state.isLogged ? (
 				<>
 					<Stack.Screen name="ShoppingList">
-					{props => <ShoppingList {...props} list={state.list} removeItem={removeItem}/>}
+					{props => <ShoppingList {...props} list={state.list} removeItem={removeItem} logout={logout}/>}
 					</Stack.Screen>
 					<Stack.Screen name="Add Item">
 					{props => <ShoppingForm {...props} addToList={addToList}/>}

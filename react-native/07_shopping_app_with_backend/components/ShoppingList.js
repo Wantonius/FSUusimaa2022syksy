@@ -8,6 +8,10 @@ const ShoppingList = (props) => {
 					onPress={() => props.navigation.navigate("Add Item")}>
 					<Text style={styles.textStyle}>Add New Item</Text>
 				</Pressable>
+				<Pressable style={[styles.navigateButton,styles.logoutButton]}
+					onPress={() => props.logout()}>
+					<Text style={styles.textStyle}>Logout</Text>
+				</Pressable>
 			</View>
 			<View style={styles.listBox}>
 				<FlatList data={props.list}
@@ -38,7 +42,8 @@ const styles = StyleSheet.create({
 	},
 	buttonBox:{
 		flex:1,
-		justifyContent:"center",
+		justifyContent:"space-evenly",
+		flexDirection:"row",
 		alignItems:"center"
 	},
 	listBox:{
@@ -51,6 +56,9 @@ const styles = StyleSheet.create({
 		justifyContent:"center",
 		alignItems:"center",
 		backgroundColor:"blue"
+	},
+	logoutButton:{
+		backgroundColor:"red"
 	},
 	textStyle:{
 		fontFamily:"sans-serif",
