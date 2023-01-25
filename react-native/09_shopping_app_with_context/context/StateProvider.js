@@ -86,3 +86,18 @@ const listReducer = (state,action) => {
 			return state;
 	}
 }
+
+const StateProvider = (props) => {
+	
+	const [state,dispatch] = useReducer(listReducer,initialState);
+	
+	return(
+		<AppStateContext.Provider value={state}>
+			<ActionContext.Provider value={{dispatch:dispatch}}>
+				{props.children}
+			</ActionContext.Provider>
+		</AppStateContext.Provider>
+	)
+}
+
+export default StateProvider;
