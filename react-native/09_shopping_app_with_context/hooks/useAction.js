@@ -81,13 +81,13 @@ const useAction = () => {
 						action.dispatch({
 							type:actionConstants.ADD_ITEM_SUCCESS
 						})
-						getList(token)
+						getList()
 						return;
 					case "removeitem":
 						action.dispatch({
 							type:actionConstants.REMOVE_ITEM_SUCCESS
 						})
-						getList(token)
+						getList()
 						return;						
 					case "edititem":
 						action.dispatch({
@@ -99,7 +99,7 @@ const useAction = () => {
 							count:"",
 							price:""
 						})
-						getList(token);
+						getList();
 						return;
 					default:
 						return;
