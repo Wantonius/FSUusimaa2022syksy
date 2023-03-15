@@ -1,0 +1,25 @@
+<!DOCtype html>
+<html>
+<head>
+	<title>Template test</title>
+</head>
+<body>
+<h2>{{.ShoppingList}}</h2>
+<table>
+	<thead>
+		<th>Type</th>
+		<th>Count</th>
+		<th>Price</th>
+	</thead>
+	<tbody>
+		{{range .Items}}
+			<tr>
+				<td>{{.Type}}</td>
+				<td>{{.Count}}</td>
+				<td>{{.Price}}</td>
+			</tr>
+		{{end}}
+	</tbody>
+</table>
+</body>
+</html>

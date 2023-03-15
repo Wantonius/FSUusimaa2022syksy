@@ -1,0 +1,41 @@
+<!DOCtype html>
+<html>
+<head>
+	<title>Template form test</title>
+</head>
+<body>
+	{{if .Success}}
+		<h1>{{.ShoppingList}}</h1>
+		<table>
+			<thead>
+				<tr>
+					<th>Type</th>
+					<th>Count</th>
+					<th>Price</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{range .Items}}
+					<tr>
+						<td>{{.Type}}</td>
+						<td>{{.Count}}</td>
+						<td>{{.Price}}</td>
+					</tr>	
+				{{end}}
+			</tbody>
+		</table>
+	
+	{{else}}
+	
+		<h1>Enter a new Shopping item</h1>
+		<form method="POST">
+			<label>Type:</label>
+			<input type="text" name="type"/>
+			<label>Count:</label>
+			<input type="number" name="count"/>
+			<label>Price:</label>
+			<input type="number" name="price"/>
+			<input type="submit" value="Add"/>
+		</form>
+</body>
+</html>
