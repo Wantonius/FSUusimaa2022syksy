@@ -1,0 +1,21 @@
+Geometry Bank
+
+We will create a bank to store, view and remove rectangles and circles. Rectangle is a struct type containing width and height.
+Circle is also a struct type containing radius. We will also create an interface called geometry which both structs will
+implement. Interface will have area() and perim() functions which return the area and the perimeter of said geometry.
+
+We will also create a slice to store circles and another to store rectangles. There will be a app loop that prompts the user to do one of the following actions:
+
+1. Add new rectangle to the store
+2. Add new circle to the store
+3. Display all rectangles
+4. Display all circles
+5. Remove a rectangle by index
+6. Remove a circle by index
+7. Quit
+
+Use the interface when you display the information. Range through with for and call for a measurement function.
+Deleting from a slice: https://stackoverflow.com/questions/37334119/how-to-delete-an-element-from-a-slice-in-golang
+
+Use fmt.Scanf() function for the user input when creating new rectangles and circles, when deleting existing ones and accessing the app loop 
+https://www.geeksforgeeks.org/fmt-scanf-function-in-golang-with-examples/
